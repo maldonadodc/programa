@@ -5,50 +5,41 @@ export default {
   theme: {
     extend: {
       colors: {
-        rust: '#4a0e10',
-        clot: '#8f1117',
-        marrow: '#d22b2b',
-        soot: '#070707',
-        fog: '#111214',
-        steel: '#24262b',
+        ash: '#191614',
+        soot: '#0b0908',
+        cinder: '#2a211d',
+        rust: '#5a201c',
+        ember: '#7b2f26',
+        brass: '#8a6a43',
+        bone: '#cdbda2',
+        parchment: '#9d8b71',
       },
       boxShadow: {
-        lumen: '0 0 40px rgba(210, 43, 43, 0.25)',
+        casket: '0 18px 40px rgba(0, 0, 0, 0.4)',
+        insetWear: 'inset 0 0 0 1px rgba(205, 189, 162, 0.08), inset 0 18px 30px rgba(255,255,255,0.02)',
       },
       backgroundImage: {
-        grid: 'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
+        hatch: 'linear-gradient(rgba(205,189,162,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(205,189,162,0.05) 1px, transparent 1px)',
+        dust: 'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.07), transparent 18%), radial-gradient(circle at 80% 70%, rgba(205,189,162,0.06), transparent 20%)',
       },
       animation: {
-        flicker: 'flicker 6s linear infinite',
-        pulseSlow: 'pulseSlow 3.2s ease-in-out infinite',
-        glitch: 'glitch 2.8s steps(2, end) infinite',
-        scan: 'scan 12s linear infinite',
+        swaySlow: 'swaySlow 8s ease-in-out infinite',
+        emberPulse: 'emberPulse 4.5s ease-in-out infinite',
+        dustShift: 'dustShift 16s linear infinite',
       },
       keyframes: {
-        flicker: {
-          '0%, 100%': { opacity: '0.92' },
-          '8%': { opacity: '0.8' },
-          '10%': { opacity: '0.96' },
-          '26%': { opacity: '0.78' },
-          '28%': { opacity: '0.93' },
-          '62%': { opacity: '0.84' },
-          '64%': { opacity: '0.98' },
+        swaySlow: {
+          '0%, 100%': { transform: 'translate3d(0, 0, 0)' },
+          '50%': { transform: 'translate3d(0, -4px, 0)' },
         },
-        pulseSlow: {
-          '0%, 100%': { transform: 'scaleX(1)', filter: 'brightness(1)' },
-          '50%': { transform: 'scaleX(0.985)', filter: 'brightness(1.18)' },
+        emberPulse: {
+          '0%, 100%': { opacity: '0.22', transform: 'scale(1)' },
+          '50%': { opacity: '0.42', transform: 'scale(1.04)' },
         },
-        glitch: {
-          '0%, 100%': { transform: 'translate(0)' },
-          '10%': { transform: 'translate(-1px, 1px)' },
-          '20%': { transform: 'translate(1px, -1px)' },
-          '30%': { transform: 'translate(-2px, 0)' },
-          '40%': { transform: 'translate(2px, 1px)' },
-          '50%': { transform: 'translate(0)' },
-        },
-        scan: {
-          '0%': { transform: 'translateY(-10%)' },
-          '100%': { transform: 'translateY(110%)' },
+        dustShift: {
+          '0%': { transform: 'translate3d(0, 0, 0)' },
+          '50%': { transform: 'translate3d(-1%, 1%, 0)' },
+          '100%': { transform: 'translate3d(1%, -1%, 0)' },
         },
       },
     },

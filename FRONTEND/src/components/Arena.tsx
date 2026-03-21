@@ -18,32 +18,30 @@ function EntityCard({ entity, align }: { entity: Entity; align: 'left' | 'right'
 
   return (
     <div
-      className={`entity-shell relative flex min-h-[18rem] flex-1 flex-col justify-between overflow-hidden border border-zinc-800 bg-gradient-to-b from-zinc-950 via-black to-zinc-950 p-5 ${
+      className={`relative flex min-h-[18rem] flex-1 flex-col justify-between overflow-hidden border border-[#3b3027] bg-[linear-gradient(180deg,#181311,#0d0b0a)] p-5 ${
         isLeft ? 'items-start text-left' : 'items-end text-right'
       }`}
     >
-      <div className="fog-layer absolute inset-0" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(210,43,43,0.14),transparent_62%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_18%,transparent_82%,rgba(0,0,0,0.28))]" />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-700/70 to-transparent" />
-      <p className="relative text-[10px] uppercase tracking-[0.4em] text-zinc-600">pit manifest</p>
-      <div className={`relative ${isLeft ? 'animate-[entityIdleLeft_4.8s_ease-in-out_infinite]' : 'animate-[entityIdleRight_5.2s_ease-in-out_infinite]'}`}>
-        <div
-          className={`text-7xl text-red-950/60 drop-shadow-[0_0_26px_rgba(143,17,23,0.28)] ${isLeft ? 'animate-glitch' : 'animate-flicker'}`}
-        >
-          {entity.sigil}
-        </div>
-        <h3 className="mt-3 text-2xl uppercase tracking-[0.2em] text-zinc-100">{entity.name}</h3>
-        <p className="mt-2 max-w-[18rem] text-xs uppercase tracking-[0.28em] text-zinc-500">{entity.title}</p>
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(205,189,162,0.04),transparent_20%,transparent_80%,rgba(90,32,28,0.08))]" />
+      <div className="absolute inset-0 bg-dust opacity-[0.18]" />
+      <div className="absolute inset-y-0 left-0 w-px bg-[linear-gradient(180deg,transparent,rgba(138,106,67,0.6),transparent)] opacity-80" />
+      <p className="relative type-block text-[10px] text-[#776955]">señor del distrito</p>
+
+      <div className={`relative ${isLeft ? 'items-start' : 'items-end'} flex flex-col`}>
+        <div className={`sigil-sway text-6xl text-[#6b4e36] ${entity.accent}`}>{entity.sigil}</div>
+        <h3 className="mt-4 text-2xl uppercase tracking-[0.12em] text-[#e0d2b8]">{entity.name}</h3>
+        <p className="mt-2 max-w-[18rem] text-xs uppercase tracking-[0.24em] text-[#8d7c66]">{entity.title}</p>
       </div>
 
       <div className="relative w-full max-w-[16rem]">
-        <div className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-[0.28em] text-zinc-600">
-          <span>condition</span>
+        <div className="mb-2 flex items-center justify-between text-[10px] uppercase tracking-[0.26em] text-[#877660]">
+          <span>dominio</span>
           <span className={entity.accent}>{entity.condition}</span>
         </div>
-        <div className="h-2 border border-zinc-800 bg-black">
-          <div className={`h-full w-3/4 ${entity.accent} bg-current shadow-[0_0_18px_currentColor]`} />
+        <div className="h-3 overflow-hidden border border-[#3d3027] bg-[#0b0908]">
+          <div
+            className={`h-full w-3/4 bg-[linear-gradient(90deg,#38251f,#785638,#b98b62)] ${entity.accent}`}
+          />
         </div>
       </div>
     </div>
@@ -52,51 +50,42 @@ function EntityCard({ entity, align }: { entity: Entity; align: 'left' | 'right'
 
 export function Arena({ left, right, onUseAbility, isAbilityLoading }: ArenaProps) {
   return (
-    <section className="panel arena-shell relative flex h-full min-h-[32rem] flex-col overflow-hidden p-4 md:p-5">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(143,17,23,0.16),transparent_40%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_16%)]" />
-      <div className="absolute inset-0 bg-grid bg-[size:36px_36px] opacity-[0.06]" />
-      <div className="fog-layer absolute inset-x-0 bottom-0 h-1/2" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_35%,rgba(0,0,0,0.5)_100%)]" />
-      <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-red-900/60 to-transparent" />
-      <div className="absolute left-1/2 top-1/2 h-56 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(210,43,43,0.2),rgba(210,43,43,0.08)_28%,transparent_68%)] blur-2xl animate-[tensionPulse_3.6s_ease-in-out_infinite]" />
-      <div className="absolute left-1/2 top-1/2 h-72 w-8 -translate-x-1/2 -translate-y-1/2 bg-[linear-gradient(180deg,transparent,rgba(255,255,255,0.16),transparent)] opacity-30 blur-md animate-[distortionDrift_6s_ease-in-out_infinite]" />
-      <div className="relative mb-5 flex items-center justify-between gap-4">
+    <section className="panel relative flex h-full min-h-[32rem] flex-col p-4 md:p-5">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(123,47,38,0.12),transparent_38%),linear-gradient(180deg,rgba(205,189,162,0.03),transparent_20%)]" />
+      <div className="absolute inset-0 bg-hatch bg-[size:34px_34px] opacity-[0.08]" />
+      <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-[linear-gradient(180deg,transparent,rgba(138,106,67,0.45),transparent)]" />
+      <div className="absolute left-1/2 top-1/2 h-56 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(123,47,38,0.16),transparent_70%)] blur-2xl animate-emberPulse" />
+
+      <div className="relative z-10 mb-5 flex items-center justify-between gap-4">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.35em] text-zinc-500">the pit arena</p>
-          <h2 className="mt-2 text-2xl uppercase tracking-[0.2em] text-zinc-100">Arena del Foso</h2>
+          <p className="type-block text-[10px] text-[#7d6b57]">camara de cobro</p>
+          <h2 className="mt-2 text-2xl uppercase tracking-[0.14em] text-[#ddd0b7]">Foso del Nexo</h2>
         </div>
-        <div className="border border-red-950 bg-black/60 px-3 py-2 text-right">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-600">status</p>
-          <p className="mt-1 text-sm uppercase tracking-[0.25em] text-red-300">sudden death</p>
+        <div className="status-chip text-right">
+          <p className="text-[10px] text-[#7b6a56]">estado</p>
+          <p className="mt-1 text-sm uppercase tracking-[0.24em] text-[#d4b292]">cobro en curso</p>
         </div>
       </div>
 
-      <div className="relative grid flex-1 gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
+      <div className="relative z-10 grid flex-1 gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
         <EntityCard entity={left} align="left" />
 
         <div className="relative mx-auto flex flex-col items-center gap-4">
-          <div className="relative flex h-28 w-28 items-center justify-center rounded-full border border-red-950 bg-black/80 shadow-lumen">
-            <div className="absolute inset-2 rounded-full border border-zinc-800" />
-            <div className="absolute inset-0 rounded-full border border-red-700/20 shadow-[0_0_60px_rgba(210,43,43,0.22)]" />
-            <div className="absolute h-full w-full animate-pulseSlow rounded-full bg-[radial-gradient(circle,rgba(210,43,43,0.22),transparent_64%)]" />
-            <div className="absolute h-full w-full rounded-full bg-[conic-gradient(from_0deg,transparent,rgba(255,255,255,0.08),transparent)] opacity-40 animate-[spin_10s_linear_infinite]" />
-            <span className="relative text-3xl uppercase tracking-[0.35em] text-red-300">VS</span>
+          <div className="relative flex h-28 w-28 items-center justify-center rounded-full border border-[#4c3b30] bg-[#120f0d]/90 shadow-[inset_0_0_0_1px_rgba(205,189,162,0.05),0_10px_30px_rgba(0,0,0,0.35)]">
+            <div className="absolute inset-2 rounded-full border border-[#332822]" />
+            <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(138,106,67,0.12),transparent_66%)]" />
+            <span className="relative text-2xl uppercase tracking-[0.28em] text-[#d7c6aa]">VS</span>
           </div>
 
           <button
             type="button"
             onClick={onUseAbility}
             disabled={isAbilityLoading}
-            className={`relative overflow-hidden border px-4 py-2 text-xs uppercase tracking-[0.28em] transition duration-300 ${
-              isAbilityLoading
-                ? 'cursor-not-allowed border-red-700/60 bg-red-950/30 text-red-200 shadow-[0_0_24px_rgba(210,43,43,0.28)]'
-                : 'border-zinc-700 bg-black/70 text-zinc-200 hover:border-red-700/80 hover:bg-red-950/20 hover:text-red-100 hover:shadow-[0_0_20px_rgba(210,43,43,0.2)]'
+            className={`menu-button min-w-[12rem] text-center ${
+              isAbilityLoading ? 'cursor-not-allowed border-[#7b4b3b] text-[#e5c8aa]' : ''
             }`}
           >
-            <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)] opacity-60" />
-            <span className={`relative ${isAbilityLoading ? 'animate-pulse text-red-100' : ''}`}>
-              {isAbilityLoading ? 'processing...' : 'Use Ability'}
-            </span>
+            {isAbilityLoading ? 'SELLANDO COBRO' : 'RITUAL DE COBRO'}
           </button>
         </div>
 

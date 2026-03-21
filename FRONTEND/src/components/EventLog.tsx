@@ -1,5 +1,3 @@
-import type { CSSProperties } from 'react';
-
 type EventEntry = {
   timestamp: string;
   text: string;
@@ -11,46 +9,34 @@ type EventLogProps = {
 };
 
 const severityTone: Record<EventEntry['severity'], string> = {
-  system: 'text-zinc-300',
-  warning: 'text-amber-300',
-  fatal: 'text-red-300',
+  system: 'text-[#cfbea3]',
+  warning: 'text-[#c89a75]',
+  fatal: 'text-[#d9a089]',
 };
 
 export function EventLog({ entries }: EventLogProps) {
   return (
-    <section className="panel crt-panel terminal-flicker flex h-full flex-col p-4">
-      <div className="mb-4 flex items-end justify-between gap-3">
+    <section className="panel flex h-full flex-col p-4">
+      <div className="relative z-10 mb-4 flex items-end justify-between gap-3">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.35em] text-zinc-500">dot matrix output</p>
-          <h2 className="mt-2 text-xl uppercase tracking-[0.18em] text-zinc-100">Event Log</h2>
+          <p className="type-block text-[10px] text-[#7d6b57]">cronica del cobro</p>
+          <h2 className="mt-2 text-xl uppercase tracking-[0.14em] text-[#ddd0b7]">Registro</h2>
         </div>
-        <p className="text-[11px] uppercase tracking-[0.25em] text-zinc-500">printer feed online</p>
+        <p className="text-[11px] uppercase tracking-[0.25em] text-[#8c7a62]">pergamino vivo</p>
       </div>
 
-      <div className="relative flex-1 overflow-hidden border border-zinc-800 bg-[#050505]">
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0,transparent_7%,transparent_93%,rgba(255,255,255,0.03)_100%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(180deg,rgba(255,255,255,0.04)_0_1px,transparent_1px_3px)] opacity-35" />
+      <div className="relative flex-1 overflow-hidden border border-[#3d3128] bg-[#0f0c0b]">
+        <div className="pointer-events-none absolute inset-0 bg-dust opacity-[0.16]" />
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(205,189,162,0.05)_0,transparent_7%,transparent_93%,rgba(90,32,28,0.04)_100%)]" />
 
-        <div className="h-full space-y-3 overflow-y-auto p-4 text-[12px] leading-6 tracking-[0.18em]">
+        <div className="relative z-10 h-full space-y-3 overflow-y-auto p-4 text-[12px] leading-6 tracking-[0.12em]">
           {entries.map((entry, index) => (
             <div
               key={`${entry.timestamp}-${index}`}
-              className="border-b border-dashed border-zinc-900 pb-3 last:border-b-0"
+              className="border-b border-dashed border-[#2a211d] pb-3 last:border-b-0"
             >
-              <span
-                className="typing-line inline-flex max-w-full overflow-hidden whitespace-nowrap align-top"
-                style={
-                  {
-                    '--chars': entry.text.length + entry.timestamp.length + 3,
-                    '--typing-duration': `${1.8 + index * 0.2}s`,
-                    '--typing-delay': `${index * 220}ms`,
-                    animationTimingFunction: `steps(${entry.text.length + entry.timestamp.length + 3}, end), ease-out`,
-                  } as CSSProperties
-                }
-              >
-                <span className="mr-3 text-zinc-600">[{entry.timestamp}]</span>
-                <span className={severityTone[entry.severity]}>{entry.text}</span>
-              </span>
+              <span className="mr-3 text-[#746553]">[{entry.timestamp}]</span>
+              <span className={severityTone[entry.severity]}>{entry.text}</span>
             </div>
           ))}
         </div>
