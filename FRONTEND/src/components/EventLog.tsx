@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+
 type EventEntry = {
   timestamp: string;
   text: string;
@@ -16,7 +18,7 @@ const severityTone: Record<EventEntry['severity'], string> = {
 
 export function EventLog({ entries }: EventLogProps) {
   return (
-    <section className="panel crt-panel flex h-full flex-col p-4">
+    <section className="panel crt-panel terminal-flicker flex h-full flex-col p-4">
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
           <p className="text-[10px] uppercase tracking-[0.35em] text-zinc-500">dot matrix output</p>
@@ -33,15 +35,22 @@ export function EventLog({ entries }: EventLogProps) {
           {entries.map((entry, index) => (
             <div
               key={`${entry.timestamp}-${index}`}
-              className="overflow-hidden whitespace-nowrap border-b border-dashed border-zinc-900 pb-3 last:border-b-0"
-              style={{
-                animation: 'typeLine 2.4s steps(40, end) forwards',
-                animationDelay: `${index * 200}ms`,
-                width: 0,
-              }}
+              className="border-b border-dashed border-zinc-900 pb-3 last:border-b-0"
             >
-              <span className="mr-3 text-zinc-600">[{entry.timestamp}]</span>
-              <span className={severityTone[entry.severity]}>{entry.text}</span>
+              <span
+                className="typing-line inline-flex max-w-full overflow-hidden whitespace-nowrap align-top"
+                style={
+                  {
+                    '--chars': entry.text.length + entry.timestamp.length + 3,
+                    '--typing-duration': `${1.8 + index * 0.2}s`,
+                    '--typing-delay': `${index * 220}ms`,
+                    animationTimingFunction: `steps(${entry.text.length + entry.timestamp.length + 3}, end), ease-out`,
+                  } as CSSProperties
+                }
+              >
+                <span className="mr-3 text-zinc-600">[{entry.timestamp}]</span>
+                <span className={severityTone[entry.severity]}>{entry.text}</span>
+              </span>
             </div>
           ))}
         </div>
