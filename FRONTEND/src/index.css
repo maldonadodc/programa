@@ -65,11 +65,52 @@
 
   .noise-overlay {
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 3px 3px, 3px 3px;
-    opacity: 0.15;
+      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.035), transparent 18%),
+      radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.03), transparent 22%);
+    background-size: 3px 3px, 3px 3px, 180px 180px, 220px 220px;
+    opacity: 0.22;
     mix-blend-mode: soft-light;
+    animation: staticDrift 9s linear infinite;
+  }
+
+  .tv-static {
+    pointer-events: none;
+    opacity: 0.12;
+    background:
+      repeating-linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.03) 0,
+        rgba(255, 255, 255, 0.03) 1px,
+        transparent 1px,
+        transparent 2px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.015) 0,
+        rgba(255, 255, 255, 0.015) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+    mix-blend-mode: screen;
+    animation: staticPulse 4.8s steps(3, end) infinite;
+  }
+
+  .signal-jitter {
+    pointer-events: none;
+    opacity: 0.16;
+    background:
+      linear-gradient(
+        180deg,
+        transparent 0%,
+        transparent 44%,
+        rgba(255, 255, 255, 0.05) 49%,
+        transparent 54%,
+        transparent 100%
+      );
+    mix-blend-mode: soft-light;
+    animation: horizontalJitter 8s ease-in-out infinite;
   }
 
   .screen-vignette {
@@ -92,21 +133,21 @@
     background:
       repeating-linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.055) 0,
-        rgba(255, 255, 255, 0.055) 1px,
+        rgba(255, 255, 255, 0.075) 0,
+        rgba(255, 255, 255, 0.075) 1px,
         rgba(0, 0, 0, 0) 1px,
-        rgba(0, 0, 0, 0) 4px
+        rgba(0, 0, 0, 0) 3px
       );
     mix-blend-mode: soft-light;
-    opacity: 0.16;
+    opacity: 0.2;
   }
 
   .crt-shell::after {
     background:
-      linear-gradient(90deg, rgba(255, 0, 0, 0.04), transparent 18%, transparent 82%, rgba(0, 150, 255, 0.04)),
+      linear-gradient(90deg, rgba(255, 0, 0, 0.05), transparent 18%, transparent 82%, rgba(0, 150, 255, 0.05)),
       radial-gradient(circle at center, transparent 55%, rgba(0, 0, 0, 0.24) 100%);
     animation: crtFlicker 5.2s linear infinite;
-    opacity: 0.22;
+    opacity: 0.26;
   }
 
   .glitch-title {
@@ -237,6 +278,64 @@
     color: rgba(255, 255, 255, 0.72);
     animation: cursorBlink 1s steps(1, end) infinite;
   }
+
+  .analog-panel {
+    background-image:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 20%, transparent 80%, rgba(143, 17, 23, 0.08)),
+      repeating-linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.018) 0,
+        rgba(255, 255, 255, 0.018) 1px,
+        transparent 1px,
+        transparent 5px
+      );
+  }
+
+  .analog-slider {
+    background-color: #101010;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+      inset 0 2px 6px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(0, 0, 0, 0.45);
+  }
+
+  .analog-slider::-webkit-slider-runnable-track {
+    height: 0.9rem;
+    background: transparent;
+  }
+
+  .analog-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.25rem;
+    height: 1.5rem;
+    margin-top: -0.18rem;
+    border: 1px solid #6b7280;
+    background:
+      linear-gradient(180deg, #b4b4b4 0%, #5f5f5f 18%, #242424 52%, #090909 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 0 16px rgba(143, 17, 23, 0.18);
+    border-radius: 2px;
+  }
+
+  .analog-slider::-moz-range-track {
+    height: 0.9rem;
+    background: transparent;
+    border: none;
+  }
+
+  .analog-slider::-moz-range-thumb {
+    width: 1.25rem;
+    height: 1.5rem;
+    border: 1px solid #6b7280;
+    background:
+      linear-gradient(180deg, #b4b4b4 0%, #5f5f5f 18%, #242424 52%, #090909 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 0 16px rgba(143, 17, 23, 0.18);
+    border-radius: 2px;
+  }
 }
 
 @keyframes titleFlicker {
@@ -293,25 +392,25 @@
 
 @keyframes crtFlicker {
   0%, 100% {
-    opacity: 0.2;
+    opacity: 0.22;
   }
   7% {
-    opacity: 0.12;
-  }
-  9% {
-    opacity: 0.26;
-  }
-  33% {
-    opacity: 0.16;
-  }
-  35% {
-    opacity: 0.24;
-  }
-  74% {
     opacity: 0.14;
   }
+  9% {
+    opacity: 0.32;
+  }
+  33% {
+    opacity: 0.18;
+  }
+  35% {
+    opacity: 0.29;
+  }
+  74% {
+    opacity: 0.16;
+  }
   76% {
-    opacity: 0.23;
+    opacity: 0.28;
   }
 }
 
@@ -418,5 +517,53 @@
   }
   56% {
     opacity: 1;
+  }
+}
+
+@keyframes staticDrift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-0.5%, 0.4%, 0);
+  }
+  100% {
+    transform: translate3d(0.4%, -0.3%, 0);
+  }
+}
+
+@keyframes staticPulse {
+  0%, 100% {
+    opacity: 0.1;
+  }
+  14% {
+    opacity: 0.14;
+  }
+  16% {
+    opacity: 0.09;
+  }
+  52% {
+    opacity: 0.13;
+  }
+  54% {
+    opacity: 0.08;
+  }
+}
+
+@keyframes horizontalJitter {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  20% {
+    transform: translate3d(0.35%, 0, 0);
+  }
+  22% {
+    transform: translate3d(-0.25%, 0, 0);
+  }
+  58% {
+    transform: translate3d(0.25%, 0.15%, 0);
+  }
+  60% {
+    transform: translate3d(-0.2%, -0.1%, 0);
   }
 }

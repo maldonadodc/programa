@@ -9,6 +9,8 @@ type Entity = {
 type ArenaProps = {
   left: Entity;
   right: Entity;
+  onUseAbility: () => void;
+  isAbilityLoading: boolean;
 };
 
 function EntityCard({ entity, align }: { entity: Entity; align: 'left' | 'right' }) {
@@ -48,7 +50,7 @@ function EntityCard({ entity, align }: { entity: Entity; align: 'left' | 'right'
   );
 }
 
-export function Arena({ left, right }: ArenaProps) {
+export function Arena({ left, right, onUseAbility, isAbilityLoading }: ArenaProps) {
   return (
     <section className="panel arena-shell relative flex h-full min-h-[32rem] flex-col overflow-hidden p-4 md:p-5">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(143,17,23,0.16),transparent_40%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent_16%)]" />
@@ -72,12 +74,30 @@ export function Arena({ left, right }: ArenaProps) {
       <div className="relative grid flex-1 gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
         <EntityCard entity={left} align="left" />
 
-        <div className="relative mx-auto flex h-28 w-28 items-center justify-center rounded-full border border-red-950 bg-black/80 shadow-lumen">
-          <div className="absolute inset-2 rounded-full border border-zinc-800" />
-          <div className="absolute inset-0 rounded-full border border-red-700/20 shadow-[0_0_60px_rgba(210,43,43,0.22)]" />
-          <div className="absolute h-full w-full animate-pulseSlow rounded-full bg-[radial-gradient(circle,rgba(210,43,43,0.22),transparent_64%)]" />
-          <div className="absolute h-full w-full rounded-full bg-[conic-gradient(from_0deg,transparent,rgba(255,255,255,0.08),transparent)] opacity-40 animate-[spin_10s_linear_infinite]" />
-          <span className="relative text-3xl uppercase tracking-[0.35em] text-red-300">VS</span>
+        <div className="relative mx-auto flex flex-col items-center gap-4">
+          <div className="relative flex h-28 w-28 items-center justify-center rounded-full border border-red-950 bg-black/80 shadow-lumen">
+            <div className="absolute inset-2 rounded-full border border-zinc-800" />
+            <div className="absolute inset-0 rounded-full border border-red-700/20 shadow-[0_0_60px_rgba(210,43,43,0.22)]" />
+            <div className="absolute h-full w-full animate-pulseSlow rounded-full bg-[radial-gradient(circle,rgba(210,43,43,0.22),transparent_64%)]" />
+            <div className="absolute h-full w-full rounded-full bg-[conic-gradient(from_0deg,transparent,rgba(255,255,255,0.08),transparent)] opacity-40 animate-[spin_10s_linear_infinite]" />
+            <span className="relative text-3xl uppercase tracking-[0.35em] text-red-300">VS</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={onUseAbility}
+            disabled={isAbilityLoading}
+            className={`relative overflow-hidden border px-4 py-2 text-xs uppercase tracking-[0.28em] transition duration-300 ${
+              isAbilityLoading
+                ? 'cursor-not-allowed border-red-700/60 bg-red-950/30 text-red-200 shadow-[0_0_24px_rgba(210,43,43,0.28)]'
+                : 'border-zinc-700 bg-black/70 text-zinc-200 hover:border-red-700/80 hover:bg-red-950/20 hover:text-red-100 hover:shadow-[0_0_20px_rgba(210,43,43,0.2)]'
+            }`}
+          >
+            <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)] opacity-60" />
+            <span className={`relative ${isAbilityLoading ? 'animate-pulse text-red-100' : ''}`}>
+              {isAbilityLoading ? 'processing...' : 'Use Ability'}
+            </span>
+          </button>
         </div>
 
         <EntityCard entity={right} align="right" />
