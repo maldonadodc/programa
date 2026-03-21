@@ -31,8 +31,10 @@ export function Inventory({ items }: InventoryProps) {
         {items.map((item) => (
           <article
             key={item.id}
-            className="group border border-zinc-800 bg-black/50 p-3 transition duration-300 hover:border-red-900/80 hover:bg-black/70"
+            className="inventory-contract group relative overflow-hidden border border-zinc-800 bg-black/50 p-3 transition duration-300 hover:-translate-y-0.5 hover:scale-[1.015] hover:border-red-900/80 hover:bg-black/70 hover:shadow-[0_16px_34px_rgba(0,0,0,0.5),0_0_22px_rgba(143,17,23,0.18)]"
           >
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.04),transparent_20%,transparent_75%,rgba(143,17,23,0.08))] opacity-70" />
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-red-900/70 to-transparent opacity-80" />
             <div className="mb-3 flex items-start justify-between gap-3">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.28em] text-zinc-600">{item.id}</p>
@@ -43,7 +45,7 @@ export function Inventory({ items }: InventoryProps) {
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-xs uppercase tracking-[0.14em] text-zinc-400">
+            <div className="relative grid grid-cols-2 gap-3 text-xs uppercase tracking-[0.14em] text-zinc-400">
               <div>
                 <p className="text-[10px] text-zinc-600">bound entity</p>
                 <p className="mt-1 text-zinc-200">{item.demon}</p>
