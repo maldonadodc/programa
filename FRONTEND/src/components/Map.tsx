@@ -1,5 +1,6 @@
 import { useRef, useState, type MouseEvent } from 'react';
-import { MAP_DECOR_ART, type ReplaceableArt, type ZoneName, type ZoneVisual } from '../lib/worldData';
+import { type ReplaceableArt, type ZoneName, type ZoneVisual } from '../lib/worldData';
+
 
 type MapPoint = {
   x: number;
@@ -16,24 +17,6 @@ type MapProps = {
   interactionLocked?: boolean;
 };
 
-const ruins = [
-  { left: '4%', bottom: '12%', width: '9%', height: '11%' },
-  { left: '14%', bottom: '18%', width: '6%', height: '7%' },
-  { left: '28%', bottom: '10%', width: '10%', height: '8%' },
-  { left: '41%', bottom: '14%', width: '7%', height: '10%' },
-  { left: '56%', bottom: '9%', width: '12%', height: '8%' },
-  { left: '72%', bottom: '16%', width: '9%', height: '7%' },
-  { left: '86%', bottom: '11%', width: '7%', height: '10%' },
-];
-
-const towers = [
-  { left: '8%', height: '28%', width: '4%' },
-  { left: '22%', height: '36%', width: '5%' },
-  { left: '37%', height: '30%', width: '4%' },
-  { left: '61%', height: '34%', width: '5%' },
-  { left: '78%', height: '29%', width: '4%' },
-];
-
 const connectors = [
   { left: '31%', top: '22%', width: '17%', rotate: '18deg' },
   { left: '52%', top: '22%', width: '17%', rotate: '-18deg' },
@@ -41,6 +24,11 @@ const connectors = [
   { left: '52%', top: '59%', width: '18%', rotate: '16deg' },
   { left: '47%', top: '52%', width: '6%', rotate: '90deg' },
 ];
+
+function getAssetClassName(art: ReplaceableArt) {
+  const objectFit = art.fit === 'contain' ? 'object-contain p-1.5' : 'object-cover';
+  return `${objectFit} ${art.mirrored ? 'scale-x-[-1]' : ''}`;
+}
 
 export function Map({
   onMapClick,
@@ -73,26 +61,6 @@ export function Map({
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,248,232,0.08),transparent_20%),radial-gradient(circle_at_18%_72%,rgba(122,104,160,0.14),transparent_22%),radial-gradient(circle_at_80%_22%,rgba(187,134,84,0.18),transparent_22%),radial-gradient(circle_at_18%_18%,rgba(103,134,168,0.16),transparent_20%),radial-gradient(circle_at_82%_70%,rgba(216,197,141,0.14),transparent_22%)]" />
       <div className="absolute inset-0 bg-hatch bg-[size:22px_22px] opacity-[0.14]" />
       <div className="absolute inset-x-0 bottom-0 h-[28%] bg-[linear-gradient(180deg,rgba(19,15,13,0.1),rgba(12,10,9,0.6))]" />
-
-      {towers.map((tower) => (
-        <img
-          key={`${tower.left}-${tower.height}`}
-          src={MAP_DECOR_ART.tower.src}
-          alt={MAP_DECOR_ART.tower.alt}
-          className="pointer-events-none absolute bottom-[21%] object-fill opacity-85"
-          style={{ left: tower.left, height: tower.height, width: tower.width }}
-        />
-      ))}
-
-      {ruins.map((ruin) => (
-        <img
-          key={`${ruin.left}-${ruin.width}`}
-          src={MAP_DECOR_ART.ruin.src}
-          alt={MAP_DECOR_ART.ruin.alt}
-          className="pointer-events-none absolute object-fill opacity-90"
-          style={{ left: ruin.left, bottom: ruin.bottom, width: ruin.width, height: ruin.height }}
-        />
-      ))}
 
       {connectors.map((connector) => (
         <div
@@ -141,9 +109,15 @@ export function Map({
               onMouseEnter={() => setHoveredZone(zone.id)}
               onMouseLeave={() => setHoveredZone((current) => (current === zone.id ? null : current))}
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${zone.tone}`} />
-              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,248,232,0.08)_1px,transparent_1px),linear-gradient(180deg,rgba(255,248,232,0.05)_1px,transparent_1px)] bg-[size:9px_9px] opacity-45" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,248,232,0.18),transparent_32%),radial-gradient(circle_at_bottom,rgba(0,0,0,0.16),transparent_40%)]" />
+              <img
+                src={zone.backgroundArt.src}
+                alt={zone.backgroundArt.alt}
+                className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                style={{ objectPosition: zone.backgroundArt.position ?? 'center' }}
+              />
+              <div className={`absolute inset-0 bg-gradient-to-br ${zone.tone} opacity-65`} />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,248,232,0.08)_1px,transparent_1px),linear-gradient(180deg,rgba(255,248,232,0.05)_1px,transparent_1px)] bg-[size:9px_9px] opacity-35" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,248,232,0.22),transparent_28%),linear-gradient(180deg,rgba(9,8,7,0.12),rgba(9,8,7,0.72))]" />
               <div className="absolute inset-y-0 left-0 w-[4px] bg-[linear-gradient(180deg,transparent,rgba(255,248,232,0.75),transparent)] opacity-90" />
 
               <div className="relative flex h-full flex-col justify-between p-3">
@@ -155,7 +129,8 @@ export function Map({
                   <img
                     src={zone.demonArt.src}
                     alt={zone.demonArt.alt}
-                    className="zone-token-image h-12 w-12"
+                    className={`zone-token-image h-12 w-12 ${getAssetClassName(zone.demonArt)}`}
+                    style={{ objectPosition: zone.demonArt.position ?? 'center' }}
                   />
                 </div>
 
@@ -163,7 +138,8 @@ export function Map({
                   <img
                     src={zone.markerArt.src}
                     alt={zone.markerArt.alt}
-                    className="zone-token-image h-12 w-12"
+                    className={`zone-token-image h-12 w-12 ${getAssetClassName(zone.markerArt)}`}
+                    style={{ objectPosition: zone.markerArt.position ?? 'center' }}
                   />
 
                   <div className={`type-block text-[10px] text-[#f2e7d4] transition-opacity duration-300 ${isHovered || isActive ? 'opacity-100' : 'opacity-0'}`}>
@@ -189,7 +165,8 @@ export function Map({
             <img
               src={playerArt.src}
               alt={playerArt.alt}
-              className="map-player-sprite relative h-16 w-16"
+              className={`map-player-sprite relative h-16 w-16 ${getAssetClassName(playerArt)}`}
+              style={{ objectPosition: playerArt.position ?? 'center' }}
             />
           </div>
         </div>

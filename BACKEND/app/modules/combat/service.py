@@ -5,18 +5,19 @@ from copy import deepcopy
 from fastapi import HTTPException, status
 
 from app.data.store import active_combats, combat_id_sequence
-from app.modules.demons.ai import get_next_demon_action
-from app.modules.demons.service import get_demon
+from app.modules.agents.service import decide_action, get_agent
+from app.modules.payment.service import process_payment
 from app.modules.player.service import get_player, update_player_progress
 
 
 DEFEND_BONUS = 5
 ABILITY_BONUS = 6
+PLAYER_ABILITY_PAYMENT_COST = 20
 
 
 def start_combat(player_id: int, demon_id: int, zone_id: int | None = None) -> dict:
     player = deepcopy(get_player(player_id))
-    demon = deepcopy(get_demon(demon_id))
+    demon = deepcopy(get_agent(demon_id))
     demon["max_health"] = demon["stats"]["hp"]
 
     if player["health"] <= 0:
@@ -76,7 +77,7 @@ def perform_action(combat_id: int, action: str) -> dict:
     demon = combat["demon"]
     demon_stats = demon["stats"]
     battle_log: list[str] = []
-    resolved_action = action
+    payment_result: dict | None = None
 
     if action == "attack":
         demon_defense = demon_stats["defense"] + (
@@ -94,6 +95,17 @@ def perform_action(combat_id: int, action: str) -> dict:
             f"{player['username']} takes a defensive stance and prepares for the next hit."
         )
     else:
+        payment_result = process_payment(
+            player_id=combat["player_id"],
+            amount=PLAYER_ABILITY_PAYMENT_COST,
+            action_type=action,
+        )
+        if not payment_result["success"]:
+            battle_log.append(
+                f"{player['username']} failed to authorize the x402 payment. Ability denied."
+            )
+            return _build_action_response(combat, battle_log, action, payment_result)
+
         ability_attack = player["attack"] + ABILITY_BONUS
         demon_defense = demon_stats["defense"] + (
             DEFEND_BONUS if combat["demon_defending"] else 0
@@ -110,13 +122,19 @@ def perform_action(combat_id: int, action: str) -> dict:
         combat["current_turn"] = "finished"
         battle_log.append(f"{demon['name']} was defeated.")
         _grant_victory_rewards(combat)
-        return _build_action_response(combat, battle_log, resolved_action)
+        return _build_action_response(combat, battle_log, action, payment_result)
 
     combat["current_turn"] = "demon"
 
-    demon_action = get_next_demon_action(demon)
+    demon_action = decide_action(
+        {
+            "hp": demon_stats["hp"],
+            "max_hp": demon["max_health"],
+            "under_pressure": demon_stats["hp"] <= max(1, demon["max_health"] // 3),
+        },
+        demon,
+    )
     _apply_demon_action(combat, demon_action, battle_log)
-    resolved_action = demon_action
     combat["player_defending"] = False
 
     if player["health"] == 0:
@@ -126,10 +144,15 @@ def perform_action(combat_id: int, action: str) -> dict:
     else:
         combat["turn"] += 1
         combat["current_turn"] = "player"
-    return _build_action_response(combat, battle_log, resolved_action)
+    return _build_action_response(combat, battle_log, action, payment_result)
 
 
-def _build_action_response(combat: dict, battle_log: list[str], action: str) -> dict:
+def _build_action_response(
+    combat: dict,
+    battle_log: list[str],
+    action: str,
+    payment_result: dict | None = None,
+) -> dict:
     return {
         "combat_id": combat["combat_id"],
         "status": combat["status"],
@@ -138,6 +161,8 @@ def _build_action_response(combat: dict, battle_log: list[str], action: str) -> 
         "player_hp": combat["player"]["health"],
         "enemy_hp": combat["demon"]["stats"]["hp"],
         "action": action,
+        "payment": payment_result["payment"] if payment_result else "not_required",
+        "transaction_id": payment_result["transaction_id"] if payment_result else None,
         "log": _format_log(battle_log),
     }
 

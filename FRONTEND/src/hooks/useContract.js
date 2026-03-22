@@ -1,139 +1,111 @@
-// ============================================================
-//  useContract.js — BLOOD & DEBT
-//  Hook principal de React para interacción con blockchain
-//  Importa las funciones puras de lib/bloodDebtConnector.js
-// ============================================================
+import { useCallback, useEffect, useState } from 'react';
+import { BrowserProvider, getAddress } from 'ethers';
 
-import { useState, useEffect, useCallback } from "react";
-import {
-  connectWallet,
-  getBloodBalance,
-  callFirmarPacto,
-  executeSpecialAttack,
-  registerMetaMaskListeners,
-  restoreSession,
-} from "../lib/bloodDebtConnector";
+function getEthereum() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return window.ethereum ?? null;
+}
 
 export function useContract() {
-  const [account, setAccount]           = useState(null);
-  const [bloodBalance, setBloodBalance] = useState("0");
-  const [pactLoading, setPactLoading]   = useState(false);
-  const [txLoading, setTxLoading]       = useState(false);
-  const [error, setError]               = useState(null);
+  const [account, setAccount] = useState(null);
+  const [error, setError] = useState(null);
+  const [isConnecting, setIsConnecting] = useState(false);
 
-  // ── Helpers ─────────────────────────────────────────────
+  const syncConnectedAccount = useCallback(async () => {
+    const ethereum = getEthereum();
+    if (!ethereum) {
+      setAccount(null);
+      return null;
+    }
 
-  const refreshBloodBalance = useCallback(async (address) => {
+    const provider = new BrowserProvider(ethereum);
+    const accounts = await provider.send('eth_accounts', []);
+    const nextAccount = accounts[0] ? getAddress(accounts[0]) : null;
+    setAccount(nextAccount);
+    return nextAccount;
+  }, []);
+
+  const connect = useCallback(async () => {
+    const ethereum = getEthereum();
+    if (!ethereum) {
+      const message = 'Wallet not detected';
+      setError(message);
+      return null;
+    }
+
+    setError(null);
+    setIsConnecting(true);
+
     try {
-      const { formatted } = await getBloodBalance(address);
-      setBloodBalance(formatted);
+      const provider = new BrowserProvider(ethereum);
+      const accounts = await provider.send('eth_requestAccounts', []);
+      const nextAccount = accounts[0] ? getAddress(accounts[0]) : null;
+
+      if (!nextAccount) {
+        throw new Error('Wallet not detected');
+      }
+
+      setAccount(nextAccount);
+      return nextAccount;
     } catch (err) {
-      console.error("[Blood & Debt] Error leyendo saldo $BLOOD:", err);
-      setBloodBalance("0");
+      const message =
+        err && typeof err === 'object' && 'code' in err && err.code === 4001
+          ? 'Wallet connection rejected'
+          : err instanceof Error
+            ? err.message
+            : 'Wallet connection failed';
+
+      setError(message);
+      return null;
+    } finally {
+      setIsConnecting(false);
     }
   }, []);
 
-  const parseError = (err) => {
-    if (err.code === 4001)              return "Transacción cancelada. El pacto fue rechazado.";
-    if (err.code === "CALL_EXCEPTION")  return `El contrato rechazó la operación: ${err.reason || "revert sin mensaje"}`;
-    if (err.code === "INSUFFICIENT_FUNDS") return "Gas insuficiente. Necesitas SOUL para las fees de la red.";
-    if (err.code === "NETWORK_ERROR")   return "No se puede conectar a la red. ¿Está corriendo el nodo?";
-    return err.message || "Error desconocido en el ritual.";
-  };
-
-  // ── Conexión ─────────────────────────────────────────────
-
-  const connect = useCallback(async () => {
+  const clearError = useCallback(() => {
     setError(null);
-    setTxLoading(true);
-    try {
-      const address = await connectWallet();
-      setAccount(address);
-      await refreshBloodBalance(address);
-    } catch (err) {
-      setError(parseError(err));
-    } finally {
-      setTxLoading(false);
-    }
-  }, [refreshBloodBalance]);
-
-  // ── firmarPacto() ────────────────────────────────────────
-
-  const firmarPacto = useCallback(async () => {
-    if (!account) {
-      setError("Conecta tu wallet antes de sellar un pacto.");
-      return null;
-    }
-    setError(null);
-    setPactLoading(true);
-    try {
-      const receipt = await callFirmarPacto(account);
-      await refreshBloodBalance(account);
-      return receipt;
-    } catch (err) {
-      setError(parseError(err));
-      return null;
-    } finally {
-      setPactLoading(false);
-    }
-  }, [account, refreshBloodBalance]);
-
-  // ── Protocolo x402 — Ataque Especial ────────────────────
-
-  const ataqueEspecial = useCallback(async (costeSangre = "12") => {
-    if (!account) {
-      setError("Conecta tu wallet antes de ejecutar una habilidad.");
-      return null;
-    }
-    setError(null);
-    setPactLoading(true);
-    try {
-      const receipt = await executeSpecialAttack(account, costeSangre);
-      await refreshBloodBalance(account);
-      return receipt;
-    } catch (err) {
-      setError(parseError(err));
-      return null;
-    } finally {
-      setPactLoading(false);
-    }
-  }, [account, refreshBloodBalance]);
-
-  // ── Restaurar sesión + listeners MetaMask ────────────────
+  }, []);
 
   useEffect(() => {
-    // Restaura sesión silenciosamente al montar
-    restoreSession().then((address) => {
-      if (address) {
-        setAccount(address);
-        refreshBloodBalance(address);
+    void syncConnectedAccount();
+  }, [syncConnectedAccount]);
+
+  useEffect(() => {
+    const ethereum = getEthereum();
+    if (!ethereum?.on) {
+      return undefined;
+    }
+
+    const handleAccountsChanged = (accounts) => {
+      const nextAccount = accounts[0] ? getAddress(accounts[0]) : null;
+      setAccount(nextAccount);
+      setError(null);
+    };
+
+    const handleChainChanged = () => {
+      void syncConnectedAccount();
+    };
+
+    ethereum.on('accountsChanged', handleAccountsChanged);
+    ethereum.on('chainChanged', handleChainChanged);
+
+    return () => {
+      if (ethereum.removeListener) {
+        ethereum.removeListener('accountsChanged', handleAccountsChanged);
+        ethereum.removeListener('chainChanged', handleChainChanged);
       }
-    });
-
-    // Escucha cambios de cuenta y red
-    const cleanup = registerMetaMaskListeners(
-      (newAddress) => {
-        setAccount(newAddress);
-        if (newAddress) refreshBloodBalance(newAddress);
-        else setBloodBalance("0");
-      },
-      () => window.location.reload()
-    );
-
-    return cleanup;
-  }, [refreshBloodBalance]);
-
-  // ── API pública ──────────────────────────────────────────
+    };
+  }, [syncConnectedAccount]);
 
   return {
     account,
-    bloodBalance,
-    pactLoading,
-    txLoading,
     error,
+    isConnecting,
+    walletDetected: Boolean(getEthereum()),
     connect,
-    firmarPacto,
-    ataqueEspecial,
-    refreshBloodBalance,
+    clearError,
   };
 }

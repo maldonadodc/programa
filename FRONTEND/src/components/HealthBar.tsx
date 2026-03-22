@@ -1,9 +1,11 @@
 type HealthBarProps = {
   current: number;
   max: number;
+  statusText?: string;
+  isRecovering?: boolean;
 };
 
-export function HealthBar({ current, max }: HealthBarProps) {
+export function HealthBar({ current, max, statusText, isRecovering = false }: HealthBarProps) {
   const clamped = Math.max(0, Math.min(current, max));
   const percentage = (clamped / max) * 100;
   const isCritical = percentage < 30;
@@ -53,6 +55,18 @@ export function HealthBar({ current, max }: HealthBarProps) {
         </span>
         <span className={isCritical ? 'text-[#d5a48e]' : ''}>{percentage.toFixed(0)}%</span>
       </div>
+
+      {statusText && (
+        <div
+          className={`relative z-10 mt-4 border px-3 py-2 text-[10px] uppercase tracking-[0.24em] ${
+            isRecovering
+              ? 'border-[#5d6b4f] bg-[#12160f] text-[#cfe0b7]'
+              : 'border-[#5b4636] bg-[#16110f] text-[#d5b18d]'
+          }`}
+        >
+          {statusText}
+        </div>
+      )}
     </section>
   );
 }

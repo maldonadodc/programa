@@ -1,3 +1,5 @@
+import { CITY_ENEMY_ASSETS, DEMON_ASSETS, PLAYER_ASSETS, UI_ASSETS, ZONE_ASSETS } from './assets';
+
 export type ZoneName =
   | 'City'
   | 'Echo Abyss'
@@ -6,9 +8,108 @@ export type ZoneName =
   | 'Dome of Avarice'
   | 'Pit Arena';
 
+export type DemonContractId = 'thalassos' | 'pyrrhus' | 'maliki' | 'valerius';
+export type ContractTheme = 'Abyss' | 'Fire' | 'Shadow' | 'Gold';
+export type TokenBoostType = 'attack' | 'defense' | 'special';
+export type BehaviorMetricType = 'attackCount' | 'defendCount' | 'abilityCount' | 'tokenUsage';
+
 export type ReplaceableArt = {
   src: string;
   alt: string;
+  fit?: 'cover' | 'contain';
+  position?: string;
+  mirrored?: boolean;
+};
+
+export type CombatStats = {
+  hp: number;
+  attack: number;
+  defense: number;
+  specialAttack: number;
+};
+
+export type ContractCoreStats = {
+  attack: number;
+  defense: number;
+  specialAttack: number;
+};
+
+export type CombatRewards = {
+  reputationGain: number;
+  tokensReward: number;
+};
+
+export type PlayerBehaviorStats = {
+  battlesWon: number;
+  attackCount: number;
+  defendCount: number;
+  abilityCount: number;
+  tokenUsage: number;
+};
+
+export type CombatStatRange = {
+  min: number;
+  max: number;
+};
+
+export type CombatStatRanges = {
+  hp: CombatStatRange;
+  attack: CombatStatRange;
+  defense: CombatStatRange;
+  specialAttack: CombatStatRange;
+};
+
+export type EncounterEntity = {
+  id: string;
+  name: string;
+  title: string;
+  contract: string;
+  accent: string;
+  image: ReplaceableArt;
+  type?: string;
+  strategyHint?: string;
+  stats: CombatStats;
+};
+
+export type EnemyEncounter = EncounterEntity & {
+  rewards: CombatRewards;
+};
+
+export type EnemyEncounterTemplate = Omit<EnemyEncounter, 'stats'> & {
+  statRanges: CombatStatRanges;
+};
+
+export type ContractAbilityTier = {
+  level: number;
+  abilities: string[];
+};
+
+export type DemonPersonalityProfile = {
+  favoredBehavior: BehaviorMetricType;
+  minimumReputation: number;
+  preferredRatio: number;
+  minimumFavoredActions: number;
+  allowUnproven: boolean;
+  preferenceLabel: string;
+  evaluationLabel: string;
+  rejectionDialogue: string;
+};
+
+export type DemonContract = {
+  id: DemonContractId;
+  name: string;
+  title: string;
+  zone: ZoneName;
+  theme: ContractTheme;
+  accent: string;
+  image: ReplaceableArt;
+  note: string;
+  progressionLabel: string;
+  baseStats: ContractCoreStats;
+  levelGrowth: ContractCoreStats;
+  economyBonusTokens: number;
+  abilitiesByLevel: ContractAbilityTier[];
+  personality: DemonPersonalityProfile;
 };
 
 export type ZoneVisual = {
@@ -22,210 +123,331 @@ export type ZoneVisual = {
   tone: string;
   border: string;
   text: string;
+  backgroundArt: ReplaceableArt;
   demonArt: ReplaceableArt;
   markerArt: ReplaceableArt;
 };
 
-export type EncounterEntity = {
-  name: string;
-  title: string;
-  contract: string;
-  accent: string;
-  image: ReplaceableArt;
-  health: number;
+export type TokenBoostOption = {
+  id: TokenBoostType;
+  label: string;
+  cost: number;
+  effect: number;
+  probability: string;
+  description: string;
 };
 
-export type ZoneContract = {
-  zone: ZoneName;
-  title: string;
-  demon: string;
-  remanent: string;
-  note: string;
+export type TokenHealOption = {
+  cost: number;
+  healAmount: number;
+  probability: string;
+  description: string;
 };
 
-function svgDataUri(svg: string) {
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-}
+export const SOUL_ACTION_COSTS = {
+  attack: 1,
+  ability: 3,
+  contractAttempt: 5,
+  boost: 2,
+  heal: 2,
+} as const;
 
-function portraitSvg({
-  label,
-  glyph,
-  background,
-  accent,
-  frame,
-}: {
-  label: string;
-  glyph: string;
-  background: string;
-  accent: string;
-  frame: string;
-}) {
-  return svgDataUri(`
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 280" shape-rendering="crispEdges">
-      <defs>
-        <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="${background}"/>
-          <stop offset="100%" stop-color="#16110f"/>
-        </linearGradient>
-      </defs>
-      <rect width="240" height="280" fill="url(#bg)"/>
-      <rect x="12" y="12" width="216" height="256" fill="none" stroke="${frame}" stroke-width="4"/>
-      <rect x="28" y="26" width="184" height="228" fill="${accent}" opacity="0.12"/>
-      <rect x="78" y="46" width="84" height="54" fill="${accent}" opacity="0.25"/>
-      <rect x="64" y="108" width="112" height="86" fill="${accent}" opacity="0.35"/>
-      <rect x="86" y="196" width="68" height="38" fill="${accent}" opacity="0.28"/>
-      <text x="120" y="168" fill="${frame}" font-family="Courier New" font-size="46" text-anchor="middle">${glyph}</text>
-      <text x="120" y="248" fill="${frame}" font-family="Courier New" font-size="18" text-anchor="middle">${label}</text>
-    </svg>
-  `);
-}
-
-function tokenSvg({
-  label,
-  glyph,
-  background,
-  accent,
-}: {
-  label: string;
-  glyph: string;
-  background: string;
-  accent: string;
-}) {
-  return svgDataUri(`
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" shape-rendering="crispEdges">
-      <rect width="96" height="96" rx="8" fill="${background}"/>
-      <rect x="6" y="6" width="84" height="84" fill="none" stroke="${accent}" stroke-width="4"/>
-      <rect x="18" y="18" width="60" height="36" fill="${accent}" opacity="0.16"/>
-      <rect x="22" y="58" width="52" height="18" fill="${accent}" opacity="0.28"/>
-      <text x="48" y="53" fill="${accent}" font-family="Courier New" font-size="24" text-anchor="middle">${glyph}</text>
-      <text x="48" y="86" fill="${accent}" font-family="Courier New" font-size="11" text-anchor="middle">${label}</text>
-    </svg>
-  `);
-}
-
-export const PLAYER_PROFILE: EncounterEntity = {
+export const PLAYER_PROFILE = {
+  id: 'ashbound-envoy',
   name: 'Ashbound Envoy',
   title: 'Debt Collector of the Nexus',
   contract: 'Ashbound Writ',
   accent: '#d7c5aa',
-  image: {
-    src: portraitSvg({
-      label: 'ENVOY',
-      glyph: 'EV',
-      background: '#3a322b',
-      accent: '#d7c5aa',
-      frame: '#f1e0c0',
-    }),
-    alt: 'Portrait placeholder for the Ashbound envoy',
-  },
-  health: 82,
+  image: PLAYER_ASSETS.envoy,
+  type: 'Envoy',
+  maxHp: 82,
 };
 
-export const DEMON_ENCOUNTERS: Record<Exclude<ZoneName, 'City' | 'Pit Arena'>, EncounterEntity> = {
-  'Echo Abyss': {
+export const CITY_ENEMIES: EnemyEncounterTemplate[] = [
+  {
+    id: 'rift-runner',
+    name: 'Rift Runner',
+    title: 'Knife-fast scavenger of the cinder lanes',
+    contract: 'Smoke alley levy',
+    accent: '#d8a06d',
+    image: CITY_ENEMY_ASSETS.RiftRunner,
+    type: 'Raider',
+    statRanges: {
+      hp: { min: 120, max: 168 },
+      attack: { min: 18, max: 30 },
+      defense: { min: 10, max: 18 },
+      specialAttack: { min: 24, max: 36 },
+    },
+    rewards: {
+      reputationGain: 4,
+      tokensReward: 16,
+    },
+  },
+  {
+    id: 'cinder-brute',
+    name: 'Cinder Brute',
+    title: 'Ash-swollen breaker from the foundry outskirts',
+    contract: 'Collapsed furnace tithe',
+    accent: '#cf8d6a',
+    image: CITY_ENEMY_ASSETS.CinderBrute,
+    type: 'Juggernaut',
+    statRanges: {
+      hp: { min: 182, max: 250 },
+      attack: { min: 22, max: 35 },
+      defense: { min: 16, max: 30 },
+      specialAttack: { min: 20, max: 33 },
+    },
+    rewards: {
+      reputationGain: 6,
+      tokensReward: 22,
+    },
+  },
+  {
+    id: 'brass-sentinel',
+    name: 'Brass Sentinel',
+    title: 'Clockwork collector armed by dead magistrates',
+    contract: 'Municipal brass decree',
+    accent: '#ddc283',
+    image: CITY_ENEMY_ASSETS.BrassSentinel,
+    type: 'Construct',
+    statRanges: {
+      hp: { min: 160, max: 220 },
+      attack: { min: 15, max: 27 },
+      defense: { min: 20, max: 30 },
+      specialAttack: { min: 22, max: 34 },
+    },
+    rewards: {
+      reputationGain: 7,
+      tokensReward: 25,
+    },
+  },
+  {
+    id: 'ash-wraith',
+    name: 'Ash Wraith',
+    title: 'Veiled siphon haunting the broken roofs',
+    contract: 'Unburied ember clause',
+    accent: '#9db6d8',
+    image: CITY_ENEMY_ASSETS.AshWraith,
+    type: 'Specter',
+    statRanges: {
+      hp: { min: 132, max: 188 },
+      attack: { min: 17, max: 28 },
+      defense: { min: 12, max: 22 },
+      specialAttack: { min: 28, max: 40 },
+    },
+    rewards: {
+      reputationGain: 8,
+      tokensReward: 28,
+    },
+  },
+];
+
+export const DEMON_CONTRACTS: Record<DemonContractId, DemonContract> = {
+  thalassos: {
+    id: 'thalassos',
     name: 'Thalassos',
     title: 'Abyssal Sovereign of the Echo Well',
-    contract: 'Resonant undertow covenant',
+    zone: 'Echo Abyss',
+    theme: 'Abyss',
     accent: '#8eb4da',
-    image: {
-      src: portraitSvg({
-        label: 'THALASSOS',
-        glyph: 'TH',
-        background: '#27455d',
-        accent: '#8eb4da',
-        frame: '#d7ebff',
-      }),
-      alt: 'Portrait placeholder for Thalassos',
+    image: DEMON_ASSETS.Thalassos,
+    note: 'A defensive abyss pact that stabilizes the envoy behind heavy warding and clean counters.',
+    progressionLabel: 'Resonant Undertow Covenant',
+    baseStats: {
+      attack: 19,
+      defense: 28,
+      specialAttack: 18,
     },
-    health: 88,
+    levelGrowth: {
+      attack: 2,
+      defense: 4,
+      specialAttack: 2,
+    },
+    economyBonusTokens: 0,
+    abilitiesByLevel: [
+      { level: 1, abilities: ['Undertow Slash'] },
+      { level: 2, abilities: ['Echo Ward', 'Undertow Slash'] },
+      { level: 3, abilities: ['Echo Ward', 'Undertow Slash', 'Abyssal Break'] },
+    ],
+    personality: {
+      favoredBehavior: 'defendCount',
+      minimumReputation: 28,
+      preferredRatio: 0.34,
+      minimumFavoredActions: 3,
+      allowUnproven: false,
+      preferenceLabel: 'Favors disciplined defense and patient counterplay.',
+      evaluationLabel: 'Thalassos studies how often you defend under pressure.',
+      rejectionDialogue: 'You lack patience. Your mind is too shallow for my depths.',
+    },
   },
-  'Ashen Forge': {
+  pyrrhus: {
+    id: 'pyrrhus',
     name: 'Pyrrhus',
     title: 'Black-brass smith of the foundries',
-    contract: 'Broken anvil compact',
+    zone: 'Ashen Forge',
+    theme: 'Fire',
     accent: '#d7a16e',
-    image: {
-      src: portraitSvg({
-        label: 'PYRRHUS',
-        glyph: 'PY',
-        background: '#5d3925',
-        accent: '#d7a16e',
-        frame: '#ffe2bf',
-      }),
-      alt: 'Portrait placeholder for Pyrrhus',
+    image: DEMON_ASSETS.Pyrrhus,
+    note: 'A fire contract built for aggression, trading restraint for crushing attack output.',
+    progressionLabel: 'Broken Anvil Compact',
+    baseStats: {
+      attack: 31,
+      defense: 14,
+      specialAttack: 18,
     },
-    health: 84,
+    levelGrowth: {
+      attack: 4,
+      defense: 1,
+      specialAttack: 2,
+    },
+    economyBonusTokens: 0,
+    abilitiesByLevel: [
+      { level: 1, abilities: ['Anvil Drive'] },
+      { level: 2, abilities: ['Cinder Guard', 'Anvil Drive'] },
+      { level: 3, abilities: ['Cinder Guard', 'Anvil Drive', 'Foundry Crash'] },
+    ],
+    personality: {
+      favoredBehavior: 'attackCount',
+      minimumReputation: 42,
+      preferredRatio: 0.36,
+      minimumFavoredActions: 4,
+      allowUnproven: false,
+      preferenceLabel: 'Favors relentless aggression and repeated attack choices.',
+      evaluationLabel: 'Pyrrhus measures how often you choose direct attacks.',
+      rejectionDialogue: 'You fight like a coward. I have no pact with the weak.',
+    },
   },
-  'Tileries of Sorrow': {
+  maliki: {
+    id: 'maliki',
     name: 'Maliki',
     title: 'Mist-mother of the grieving kilns',
-    contract: 'Violet shingle covenant',
+    zone: 'Tileries of Sorrow',
+    theme: 'Shadow',
     accent: '#b395d7',
-    image: {
-      src: portraitSvg({
-        label: 'MALIKI',
-        glyph: 'MK',
-        background: '#433553',
-        accent: '#b395d7',
-        frame: '#f0e2ff',
-      }),
-      alt: 'Portrait placeholder for Maliki',
+    image: DEMON_ASSETS.Maliki,
+    note: 'A shadow contract that overindexes on special pressure and strange ability spikes.',
+    progressionLabel: 'Violet Shingle Covenant',
+    baseStats: {
+      attack: 20,
+      defense: 15,
+      specialAttack: 32,
     },
-    health: 79,
+    levelGrowth: {
+      attack: 2,
+      defense: 2,
+      specialAttack: 5,
+    },
+    economyBonusTokens: 0,
+    abilitiesByLevel: [
+      { level: 1, abilities: ['Kiln Whisper'] },
+      { level: 2, abilities: ['Mist Screen', 'Kiln Whisper'] },
+      { level: 3, abilities: ['Mist Screen', 'Kiln Whisper', 'Sorrow Bloom'] },
+    ],
+    personality: {
+      favoredBehavior: 'abilityCount',
+      minimumReputation: 34,
+      preferredRatio: 0.3,
+      minimumFavoredActions: 3,
+      allowUnproven: false,
+      preferenceLabel: 'Favors ability play and unpredictable special pressure.',
+      evaluationLabel: 'Maliki watches how often you invoke pact abilities.',
+      rejectionDialogue: "No fun... you don't play enough. Maliki doesn't like boring toys.",
+    },
   },
-  'Dome of Avarice': {
+  valerius: {
+    id: 'valerius',
     name: 'Valerius',
     title: 'Ivory warden of hollow wealth',
-    contract: 'Exhausted gold decree',
+    zone: 'Dome of Avarice',
+    theme: 'Gold',
     accent: '#e7d39b',
-    image: {
-      src: portraitSvg({
-        label: 'VALERIUS',
-        glyph: 'VA',
-        background: '#67593d',
-        accent: '#e7d39b',
-        frame: '#fff3ca',
-      }),
-      alt: 'Portrait placeholder for Valerius',
+    image: DEMON_ASSETS.Valerius,
+    note: 'A balanced gold contract that grows evenly and squeezes extra value from every City victory.',
+    progressionLabel: 'Exhausted Gold Decree',
+    baseStats: {
+      attack: 24,
+      defense: 22,
+      specialAttack: 23,
     },
-    health: 91,
+    levelGrowth: {
+      attack: 3,
+      defense: 3,
+      specialAttack: 3,
+    },
+    economyBonusTokens: 8,
+    abilitiesByLevel: [
+      { level: 1, abilities: ['Ivory Debt'] },
+      { level: 2, abilities: ['Golden Bulwark', 'Ivory Debt'] },
+      { level: 3, abilities: ['Golden Bulwark', 'Ivory Debt', 'Vault Rupture'] },
+    ],
+    personality: {
+      favoredBehavior: 'tokenUsage',
+      minimumReputation: 0,
+      preferredRatio: 0.14,
+      minimumFavoredActions: 0,
+      allowUnproven: true,
+      preferenceLabel: 'Favors token spending, leverage, and efficient investment.',
+      evaluationLabel: 'Valerius values how often you spend tokens to create advantage.',
+      rejectionDialogue: 'You hoard nothing. You are not worth investing in.',
+    },
   },
 };
 
-export const ARENA_OPPONENT: EncounterEntity = {
-  name: 'Exiled Envoy',
-  title: 'Collector of the Pit',
-  contract: 'Blind iron pact',
-  accent: '#c89b8b',
-  image: {
-    src: portraitSvg({
-      label: 'OPPONENT',
-      glyph: '??',
-      background: '#4a2e28',
-      accent: '#c89b8b',
-      frame: '#f3d7cb',
-    }),
-    alt: 'Portrait placeholder for the pit opponent',
-  },
-  health: 76,
+export const DEMON_CONTRACT_ORDER: DemonContractId[] = ['pyrrhus', 'thalassos', 'maliki', 'valerius'];
+
+export const CONTRACT_ZONE_MAP: Record<Exclude<ZoneName, 'City' | 'Pit Arena'>, DemonContractId> = {
+  'Echo Abyss': 'thalassos',
+  'Ashen Forge': 'pyrrhus',
+  'Tileries of Sorrow': 'maliki',
+  'Dome of Avarice': 'valerius',
 };
+
+export const TOKEN_BOOST_OPTIONS: TokenBoostOption[] = [
+  {
+    id: 'attack',
+    label: 'Attack Boost',
+    cost: SOUL_ACTION_COSTS.boost,
+    effect: 15,
+    probability: '78%',
+    description: '+15 Attack on your next strike.',
+  },
+  {
+    id: 'defense',
+    label: 'Defense Boost',
+    cost: SOUL_ACTION_COSTS.boost,
+    effect: 10,
+    probability: '84%',
+    description: '+10 Defense on your next guard.',
+  },
+  {
+    id: 'special',
+    label: 'Ability Boost',
+    cost: SOUL_ACTION_COSTS.boost,
+    effect: 20,
+    probability: '67%',
+    description: '+20 Special Power on your next ability.',
+  },
+];
+
+export const TOKEN_HEAL_OPTION: TokenHealOption = {
+  cost: SOUL_ACTION_COSTS.heal,
+  healAmount: 14,
+  probability: '88%',
+  description: 'Restore 14 HP to your vital hold.',
+};
+
+export const CONTRACT_LEVEL_THRESHOLDS = [0, 2, 4, 7];
 
 export const UNKNOWN_OPPONENT_ART: ReplaceableArt = {
-  src: portraitSvg({
-    label: 'UNKNOWN',
-    glyph: '?',
-    background: '#2d2724',
-    accent: '#9f8f79',
-    frame: '#ddd0b7',
-  }),
-  alt: 'Unknown opponent placeholder',
+  ...UI_ASSETS.brand,
+  alt: 'Arena ward sigil',
 };
 
 export const MAP_ZONES: ZoneVisual[] = [
   {
     id: 'Echo Abyss',
     label: 'Echo Abyss',
-    sublabel: 'Abyssal district',
+    sublabel: 'Contract district',
     top: '11%',
     left: '10%',
     width: '22%',
@@ -233,19 +455,14 @@ export const MAP_ZONES: ZoneVisual[] = [
     tone: 'from-[#6786a8] via-[#5b7b96] to-[#465e73]',
     border: '#7a96b6',
     text: '#eef4fc',
-    demonArt: {
-      src: tokenSvg({ label: 'THA', glyph: 'TH', background: '#304a61', accent: '#d8e9f9' }),
-      alt: 'Map token for Thalassos',
-    },
-    markerArt: {
-      src: tokenSvg({ label: 'ABYSS', glyph: '~', background: '#3f5f77', accent: '#eef4fc' }),
-      alt: 'Map token for Echo Abyss',
-    },
+    backgroundArt: ZONE_ASSETS['Echo Abyss'],
+    demonArt: DEMON_ASSETS.Thalassos,
+    markerArt: ZONE_ASSETS['Echo Abyss'],
   },
   {
     id: 'Ashen Forge',
     label: 'Ashen Forge',
-    sublabel: 'Foundry district',
+    sublabel: 'Contract district',
     top: '12%',
     left: '66%',
     width: '22%',
@@ -253,19 +470,14 @@ export const MAP_ZONES: ZoneVisual[] = [
     tone: 'from-[#b78654] via-[#a06f45] to-[#7f5938]',
     border: '#d3a06b',
     text: '#fff0df',
-    demonArt: {
-      src: tokenSvg({ label: 'PYR', glyph: 'PY', background: '#6f4a2c', accent: '#ffe0bd' }),
-      alt: 'Map token for Pyrrhus',
-    },
-    markerArt: {
-      src: tokenSvg({ label: 'FORGE', glyph: '*', background: '#835739', accent: '#fff0df' }),
-      alt: 'Map token for Ashen Forge',
-    },
+    backgroundArt: ZONE_ASSETS['Ashen Forge'],
+    demonArt: DEMON_ASSETS.Pyrrhus,
+    markerArt: ZONE_ASSETS['Ashen Forge'],
   },
   {
     id: 'Tileries of Sorrow',
     label: 'Tileries of Sorrow',
-    sublabel: 'Fog-shrouded district',
+    sublabel: 'Contract district',
     top: '58%',
     left: '10%',
     width: '22%',
@@ -273,19 +485,14 @@ export const MAP_ZONES: ZoneVisual[] = [
     tone: 'from-[#8a7299] via-[#756083] to-[#5f4d6e]',
     border: '#a489b8',
     text: '#faf2ff',
-    demonArt: {
-      src: tokenSvg({ label: 'MAL', glyph: 'MK', background: '#59476a', accent: '#f2e9ff' }),
-      alt: 'Map token for Maliki',
-    },
-    markerArt: {
-      src: tokenSvg({ label: 'TILES', glyph: '#', background: '#6a567a', accent: '#faf2ff' }),
-      alt: 'Map token for Tileries of Sorrow',
-    },
+    backgroundArt: ZONE_ASSETS['Tileries of Sorrow'],
+    demonArt: DEMON_ASSETS.Maliki,
+    markerArt: ZONE_ASSETS['Tileries of Sorrow'],
   },
   {
     id: 'Dome of Avarice',
     label: 'Dome of Avarice',
-    sublabel: 'Ivory district',
+    sublabel: 'Contract district',
     top: '56%',
     left: '67%',
     width: '22%',
@@ -293,19 +500,14 @@ export const MAP_ZONES: ZoneVisual[] = [
     tone: 'from-[#d8c58d] via-[#c7b47d] to-[#a69266]',
     border: '#f0deb0',
     text: '#3a3123',
-    demonArt: {
-      src: tokenSvg({ label: 'VAL', glyph: 'VA', background: '#8a7a4f', accent: '#fff4d1' }),
-      alt: 'Map token for Valerius',
-    },
-    markerArt: {
-      src: tokenSvg({ label: 'DOME', glyph: '$', background: '#a08e61', accent: '#3a3123' }),
-      alt: 'Map token for Dome of Avarice',
-    },
+    backgroundArt: ZONE_ASSETS['Dome of Avarice'],
+    demonArt: DEMON_ASSETS.Valerius,
+    markerArt: ZONE_ASSETS['Dome of Avarice'],
   },
   {
     id: 'City',
     label: 'City',
-    sublabel: 'Ashen Nexus',
+    sublabel: 'Combat district',
     top: '30%',
     left: '38%',
     width: '24%',
@@ -313,19 +515,14 @@ export const MAP_ZONES: ZoneVisual[] = [
     tone: 'from-[#a8a198] via-[#91897f] to-[#6f685f]',
     border: '#d4ccc0',
     text: '#1f1c18',
-    demonArt: {
-      src: tokenSvg({ label: 'NEXUS', glyph: 'NX', background: '#70695f', accent: '#f9f2e7' }),
-      alt: 'Map token for the Ashen Nexus',
-    },
-    markerArt: {
-      src: tokenSvg({ label: 'CITY', glyph: '[]', background: '#857d72', accent: '#1f1c18' }),
-      alt: 'Map token for the City',
-    },
+    backgroundArt: ZONE_ASSETS.City,
+    demonArt: CITY_ENEMIES[0].image,
+    markerArt: ZONE_ASSETS.City,
   },
   {
     id: 'Pit Arena',
     label: 'Pit Arena',
-    sublabel: 'Judgment pit',
+    sublabel: 'Online arena',
     top: '70%',
     left: '40%',
     width: '20%',
@@ -333,100 +530,115 @@ export const MAP_ZONES: ZoneVisual[] = [
     tone: 'from-[#966255] via-[#7d5046] to-[#603a33]',
     border: '#be8676',
     text: '#fff0e8',
-    demonArt: {
-      src: tokenSvg({ label: 'PIT', glyph: 'AF', background: '#73483f', accent: '#ffe1d7' }),
-      alt: 'Map token for Pit Arena',
-    },
-    markerArt: {
-      src: tokenSvg({ label: 'ARENA', glyph: 'O', background: '#83584d', accent: '#fff0e8' }),
-      alt: 'Map token for Pit Arena',
-    },
+    backgroundArt: ZONE_ASSETS['Pit Arena'],
+    demonArt: UNKNOWN_OPPONENT_ART,
+    markerArt: ZONE_ASSETS['Pit Arena'],
   },
 ];
 
-export const MAP_DECOR_ART = {
-  ruin: {
-    src: svgDataUri(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" shape-rendering="crispEdges">
-        <rect width="120" height="100" fill="#241d19"/>
-        <rect x="8" y="30" width="104" height="62" fill="#4a3f37"/>
-        <rect x="16" y="18" width="24" height="18" fill="#69594d"/>
-        <rect x="48" y="8" width="28" height="28" fill="#756456"/>
-        <rect x="82" y="22" width="20" height="14" fill="#69594d"/>
-        <rect x="20" y="48" width="14" height="18" fill="#1b1613"/>
-        <rect x="48" y="52" width="16" height="20" fill="#1b1613"/>
-        <rect x="76" y="46" width="18" height="22" fill="#1b1613"/>
-      </svg>
-    `),
-    alt: 'Map ruin placeholder',
-  },
-  tower: {
-    src: svgDataUri(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 180" shape-rendering="crispEdges">
-        <rect width="80" height="180" fill="#221c18"/>
-        <rect x="18" y="18" width="44" height="152" fill="#5a4c41"/>
-        <rect x="22" y="26" width="36" height="18" fill="#6f5f52"/>
-        <rect x="26" y="60" width="10" height="18" fill="#1b1613"/>
-        <rect x="44" y="92" width="10" height="18" fill="#1b1613"/>
-        <rect x="28" y="128" width="24" height="30" fill="#322923"/>
-      </svg>
-    `),
-    alt: 'Map tower placeholder',
-  },
-};
+export function getContractLevel(progress: number) {
+  if (progress >= CONTRACT_LEVEL_THRESHOLDS[3]) return 4;
+  if (progress >= CONTRACT_LEVEL_THRESHOLDS[2]) return 3;
+  if (progress >= CONTRACT_LEVEL_THRESHOLDS[1]) return 2;
+  return 1;
+}
 
-export const CONTRACT_BY_ZONE: Record<ZoneName, ZoneContract> = {
-  City: {
-    zone: 'City',
-    title: 'Custody of the Nexus',
-    demon: 'Chancellor of Cinders',
-    remanent: '42',
-    note: 'The city core breathes like a sacred furnace and holds the pulse of every debt ever named.',
-  },
-  'Echo Abyss': {
-    zone: 'Echo Abyss',
-    title: 'Debt of the Resonant Well',
-    demon: 'Thalassos',
-    remanent: '73',
-    note: 'Beneath its drowned chambers, indebted voices still call for the collector by name.',
-  },
-  'Ashen Forge': {
-    zone: 'Ashen Forge',
-    title: 'Tribute of the Black Anvil',
-    demon: 'Pyrrhus',
-    remanent: '91',
-    note: 'Its chimneys forge neither steel nor mercy, only pacts and scorched hearts fit for collection.',
-  },
-  'Tileries of Sorrow': {
-    zone: 'Tileries of Sorrow',
-    title: 'Lament of the Broken Tile',
-    demon: 'Maliki',
-    remanent: '58',
-    note: 'A violet fog blankets the roofline and leaves the indebted suspended between grief and soot.',
-  },
-  'Dome of Avarice': {
-    zone: 'Dome of Avarice',
-    title: 'Rent of the Ivory Vault',
-    demon: 'Valerius',
-    remanent: '116',
-    note: 'Gold rots into pale bone there, and every oath is weighed like coin against a dead throne.',
-  },
-  'Pit Arena': {
-    zone: 'Pit Arena',
-    title: 'Clause of the Pit Warden',
-    demon: 'Champion of the Pit',
-    remanent: '64',
-    note: 'The arena grants no triumph, only a reckoning for the cost of standing again.',
-  },
-};
+export function getContractProgressPercent(progress: number) {
+  const level = getContractLevel(progress);
 
-export const RESULTS_BY_MODE = {
-  demon: {
-    remanent: '+38',
-    reputation: '+6',
-  },
-  arena: {
-    remanent: '+52',
-    reputation: '+11',
-  },
-};
+  if (level >= CONTRACT_LEVEL_THRESHOLDS.length) {
+    return 100;
+  }
+
+  const currentFloor = CONTRACT_LEVEL_THRESHOLDS[level - 1] ?? 0;
+  const nextTarget = CONTRACT_LEVEL_THRESHOLDS[level] ?? currentFloor;
+  const span = Math.max(1, nextTarget - currentFloor);
+
+  return Math.min(100, Math.round(((progress - currentFloor) / span) * 100));
+}
+
+export function buildContractCombatStats(contractId: DemonContractId, level: number): CombatStats {
+  const contract = DEMON_CONTRACTS[contractId];
+  const levelOffset = Math.max(0, level - 1);
+
+  return {
+    hp: PLAYER_PROFILE.maxHp,
+    attack: contract.baseStats.attack + contract.levelGrowth.attack * levelOffset,
+    defense: contract.baseStats.defense + contract.levelGrowth.defense * levelOffset,
+    specialAttack: contract.baseStats.specialAttack + contract.levelGrowth.specialAttack * levelOffset,
+  };
+}
+
+export function getUnlockedAbilities(contractId: DemonContractId, level: number) {
+  return DEMON_CONTRACTS[contractId].abilitiesByLevel
+    .filter((entry) => entry.level <= level)
+    .flatMap((entry) => entry.abilities);
+}
+
+function getRandomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function rollStat(range: CombatStatRange, bonus: number) {
+  return getRandomInt(range.min, range.max) + bonus;
+}
+
+function getEnemyThreat(stats: CombatStats) {
+  const pressureScore =
+    stats.hp + stats.attack * 2 + stats.defense * 2 + stats.specialAttack * 2;
+
+  if (pressureScore >= 420) return 'ELITE';
+  if (pressureScore >= 335) return 'BALANCED';
+  return 'WEAK';
+}
+
+function getEnemyStrategyHint(stats: CombatStats) {
+  if (stats.defense >= 24) {
+    return 'High defense detected. Ability bursts cut through this shell fastest.';
+  }
+
+  if (stats.attack >= 30) {
+    return 'Attack pressure is severe. Defend to reduce the next counterblow.';
+  }
+
+  if (stats.specialAttack >= 34) {
+    return 'Special pressure is unstable. Burst quickly before the backlash stacks.';
+  }
+
+  return 'Balanced threat. Mix strikes, guard windows, and boosted abilities.';
+}
+
+export function spawnCityEnemy(contractLevel: number, reputation: number): EnemyEncounter {
+  const template = CITY_ENEMIES[Math.floor(Math.random() * CITY_ENEMIES.length)];
+  const levelPressure = Math.max(0, contractLevel - 1);
+  const reputationPressure = Math.max(0, Math.floor(reputation / 20));
+
+  const stats: CombatStats = {
+    hp: rollStat(template.statRanges.hp, levelPressure * 16 + reputationPressure * 10),
+    attack: rollStat(template.statRanges.attack, levelPressure * 3 + reputationPressure * 2),
+    defense: rollStat(template.statRanges.defense, levelPressure * 2 + reputationPressure),
+    specialAttack: rollStat(
+      template.statRanges.specialAttack,
+      levelPressure * 3 + reputationPressure * 2,
+    ),
+  };
+
+  const threat = getEnemyThreat(stats);
+  const strategyHint = getEnemyStrategyHint(stats);
+
+  return {
+    id: `${template.id}-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    name: template.name,
+    title: template.title,
+    contract: `${threat} THREAT`,
+    accent: template.accent,
+    image: template.image,
+    type: template.type ? `${threat} / ${template.type}` : threat,
+    strategyHint,
+    stats,
+    rewards: {
+      reputationGain: template.rewards.reputationGain + levelPressure + Math.floor(reputationPressure / 2),
+      tokensReward: template.rewards.tokensReward + levelPressure * 2 + reputationPressure,
+    },
+  };
+}

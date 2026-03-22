@@ -1,5 +1,6 @@
 import type { EncounterEntity, ReplaceableArt } from '../lib/worldData';
 
+
 type ArenaStage = 'searching' | 'matched';
 
 type ArenaFlowPanelProps = {
@@ -21,7 +22,14 @@ function ArenaPortrait({
   return (
     <div className="parchment-card border border-[#46372d] p-4">
       <div className="overflow-hidden border border-[#4b3a2f] bg-[#161210]">
-        <img src={image.src} alt={image.alt} className="h-64 w-full object-cover object-center" />
+        <img
+          src={image.src}
+          alt={image.alt}
+          className={`h-64 w-full ${image.fit === 'contain' ? 'object-contain p-3' : 'object-cover'} ${
+            image.mirrored ? 'scale-x-[-1]' : ''
+          }`}
+          style={{ objectPosition: image.position ?? 'center' }}
+        />
       </div>
       <h3 className="mt-4 text-xl uppercase tracking-[0.12em] text-[#e0d2b8]">{name}</h3>
       <p className="mt-2 text-xs uppercase tracking-[0.2em] text-[#b49f80]">{subtitle}</p>

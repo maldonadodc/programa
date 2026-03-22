@@ -35,4 +35,6 @@ class CombatActionResponse(BaseModel):
     player_hp: int
     enemy_hp: int
     action: str
+    payment: str | None = None
+    transaction_id: str | None = None
     log: str

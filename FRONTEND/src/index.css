@@ -219,6 +219,24 @@
     @apply menu-button px-4 py-2 text-[11px] tracking-[0.26em];
   }
 
+  .subtle-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(138, 106, 67, 0.55) rgba(21, 17, 15, 0.35);
+  }
+
+  .subtle-scroll::-webkit-scrollbar {
+    width: 9px;
+  }
+
+  .subtle-scroll::-webkit-scrollbar-track {
+    background: rgba(21, 17, 15, 0.34);
+  }
+
+  .subtle-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(138, 106, 67, 0.78), rgba(64, 33, 26, 0.82));
+    border: 2px solid rgba(18, 15, 13, 0.95);
+  }
+
   .status-chip {
     @apply border px-3 py-2 text-[10px] uppercase tracking-[0.28em];
     border-color: rgba(86, 63, 45, 0.9);
@@ -398,6 +416,32 @@
       inset 0 0 0 1px rgba(255, 248, 232, 0.06),
       0 10px 24px rgba(0, 0, 0, 0.22);
   }
+
+  .combat-float {
+    border: 1px solid rgba(255, 248, 232, 0.16);
+    background: rgba(15, 11, 10, 0.82);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 248, 232, 0.04),
+      0 12px 28px rgba(0, 0, 0, 0.28);
+    animation: combatFloat 0.85s ease-out forwards;
+  }
+
+  .combat-portrait-hit::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(255, 248, 232, 0.06), transparent 30%, transparent 70%, rgba(123, 47, 38, 0.24)),
+      radial-gradient(circle at center, rgba(255, 248, 232, 0.16), transparent 55%);
+    animation: portraitHitFlash 0.45s ease-out;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.58;
+    transform: none;
+  }
 }
 
 @keyframes dustFloat {
@@ -541,5 +585,28 @@
   }
   50% {
     transform: translateY(-3px) scale(1.03);
+  }
+}
+
+@keyframes combatFloat {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 10px) scale(0.92);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -36px) scale(1.04);
+  }
+}
+
+@keyframes portraitHitFlash {
+  0% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0;
   }
 }

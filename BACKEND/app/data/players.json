@@ -1,0 +1,589 @@
+[
+  {
+    "id": 1,
+    "wallet_address": "0x0a15defdbdfcdc85e6f7c690da6b735db86c4884",
+    "level": 3,
+    "health": 82,
+    "max_health": 82,
+    "attack": 31,
+    "defense": 14,
+    "tokens": 250,
+    "remanent": 250,
+    "reputation": 40,
+    "contract": "pyrrhus",
+    "contract_level": 3,
+    "contract_progress": {
+      "pyrrhus": 4,
+      "thalassos": 0,
+      "maliki": 0,
+      "valerius": 0
+    },
+    "contract_requirements": {},
+    "metrics": {
+      "battlesWon": 4,
+      "attackCount": 0,
+      "defendCount": 1,
+      "abilityCount": 2,
+      "tokenUsage": 0
+    },
+    "contract_history": []
+  },
+  {
+    "id": 2,
+    "wallet_address": "0x3d787f5edd3a7fa41d4289583ed81a30d3d61a91",
+    "level": 2,
+    "health": 82,
+    "max_health": 82,
+    "attack": 24,
+    "defense": 22,
+    "tokens": 120,
+    "remanent": 120,
+    "reputation": 18,
+    "contract": "valerius",
+    "contract_level": 2,
+    "contract_progress": {
+      "pyrrhus": 0,
+      "thalassos": 0,
+      "maliki": 0,
+      "valerius": 2
+    },
+    "contract_requirements": {},
+    "metrics": {
+      "battlesWon": 2,
+      "attackCount": 0,
+      "defendCount": 3,
+      "abilityCount": 1,
+      "tokenUsage": 0
+    },
+    "contract_history": []
+  },
+  {
+    "id": 3,
+    "wallet_address": "0xbf38aa5369d719aa18b97d8b9c78ddc68193cff7",
+    "level": 1,
+    "health": 82,
+    "max_health": 82,
+    "attack": 10,
+    "defense": 3,
+    "tokens": 187,
+    "remanent": 187,
+    "reputation": 24,
+    "contract": "valerius",
+    "contract_level": 1,
+    "contract_progress": {
+      "pyrrhus": 0,
+      "thalassos": 0,
+      "maliki": 0,
+      "valerius": 0
+    },
+    "contract_requirements": {
+      "pyrrhus": [
+        {
+          "type": "reputation",
+          "required": 46
+        },
+        {
+          "type": "battlesWon",
+          "required": 4
+        }
+      ],
+      "thalassos": [
+        {
+          "type": "reputation",
+          "required": 30
+        },
+        {
+          "type": "defendCount",
+          "required": 7
+        }
+      ],
+      "maliki": [
+        {
+          "type": "reputation",
+          "required": 34
+        },
+        {
+          "type": "abilityCount",
+          "required": 4
+        }
+      ],
+      "valerius": [
+        {
+          "type": "reputation",
+          "required": 0
+        },
+        {
+          "type": "battlesWon",
+          "required": 0
+        }
+      ]
+    },
+    "metrics": {
+      "battlesWon": 0,
+      "attackCount": 0,
+      "defendCount": 0,
+      "abilityCount": 0,
+      "tokenUsage": 0
+    },
+    "contract_history": []
+  },
+  {
+    "id": 4,
+    "wallet_address": "0x60f43410e86aa754b37237b8d4918b1a91bfbe9c",
+    "level": 1,
+    "health": 82,
+    "max_health": 82,
+    "attack": 10,
+    "defense": 3,
+    "tokens": 187,
+    "remanent": 187,
+    "reputation": 24,
+    "contract": "valerius",
+    "contract_level": 1,
+    "contract_progress": {
+      "pyrrhus": 0,
+      "thalassos": 0,
+      "maliki": 0,
+      "valerius": 0
+    },
+    "contract_requirements": {
+      "pyrrhus": [
+        {
+          "type": "reputation",
+          "required": 55
+        },
+        {
+          "type": "battlesWon",
+          "required": 5
+        }
+      ],
+      "thalassos": [
+        {
+          "type": "reputation",
+          "required": 34
+        },
+        {
+          "type": "defendCount",
+          "required": 5
+        }
+      ],
+      "maliki": [
+        {
+          "type": "reputation",
+          "required": 40
+        },
+        {
+          "type": "abilityCount",
+          "required": 6
+        }
+      ],
+      "valerius": [
+        {
+          "type": "reputation",
+          "required": 0
+        },
+        {
+          "type": "battlesWon",
+          "required": 0
+        }
+      ]
+    },
+    "metrics": {
+      "battlesWon": 0,
+      "attackCount": 0,
+      "defendCount": 0,
+      "abilityCount": 0,
+      "tokenUsage": 0
+    },
+    "contract_history": []
+  },
+  {
+    "id": 5,
+    "wallet_address": "0xe908389d4bbf30e8dc72dc47cdf6b45d89e8b2a0",
+    "level": 3,
+    "health": 82,
+    "max_health": 82,
+    "attack": 10,
+    "defense": 3,
+    "tokens": 182,
+    "remanent": 182,
+    "reputation": 52,
+    "contract": "maliki",
+    "contract_level": 1,
+    "contract_progress": {
+      "pyrrhus": 0,
+      "thalassos": 0,
+      "maliki": 1,
+      "valerius": 4
+    },
+    "contract_requirements": {
+      "pyrrhus": [
+        {
+          "type": "reputation",
+          "required": 55
+        },
+        {
+          "type": "battlesWon",
+          "required": 4
+        }
+      ],
+      "thalassos": [
+        {
+          "type": "reputation",
+          "required": 27
+        },
+        {
+          "type": "defendCount",
+          "required": 7
+        }
+      ],
+      "maliki": [
+        {
+          "type": "reputation",
+          "required": 33
+        },
+        {
+          "type": "abilityCount",
+          "required": 4
+        }
+      ],
+      "valerius": [
+        {
+          "type": "reputation",
+          "required": 0
+        },
+        {
+          "type": "battlesWon",
+          "required": 0
+        }
+      ]
+    },
+    "metrics": {
+      "battlesWon": 5,
+      "attackCount": 0,
+      "defendCount": 21,
+      "abilityCount": 12,
+      "tokenUsage": 0
+    },
+    "contract_history": []
+  },
+  {
+    "id": 6,
+    "wallet_address": "0x52f74b878d019035cfe727de401b179858759317",
+    "level": 1,
+    "health": 82,
+    "max_health": 82,
+    "attack": 10,
+    "defense": 3,
+    "tokens": 187,
+    "remanent": 187,
+    "reputation": 24,
+    "contract": "valerius",
+    "contract_level": 1,
+    "contract_progress": {
+      "pyrrhus": 0,
+      "thalassos": 0,
+      "maliki": 0,
+      "valerius": 0
+    },
+    "contract_requirements": {
+      "pyrrhus": [
+        {
+          "type": "reputation",
+          "required": 58
+        },
+        {
+          "type": "battlesWon",
+          "required": 5
+        }
+      ],
+      "thalassos": [
+        {
+          "type": "reputation",
+          "required": 30
+        },
+        {
+          "type": "defendCount",
+          "required": 7
+        }
+      ],
+      "maliki": [
+        {
+          "type": "reputation",
+          "required": 36
+        },
+        {
+          "type": "abilityCount",
+          "required": 6
+        }
+      ],
+      "valerius": [
+        {
+          "type": "reputation",
+          "required": 0
+        },
+        {
+          "type": "battlesWon",
+          "required": 0
+        }
+      ]
+    },
+    "metrics": {
+      "battlesWon": 0,
+      "attackCount": 0,
+      "defendCount": 0,
+      "abilityCount": 0,
+      "tokenUsage": 0
+    },
+    "contract_history": []
+  },
+  {
+    "id": 7,
+    "wallet_address": "0xf10e2821bbbea527ea02200352313bc059445190",
+    "level": 1,
+    "health": 82,
+    "max_health": 82,
+    "attack": 10,
+    "defense": 3,
+    "tokens": 149,
+    "remanent": 149,
+    "reputation": 24,
+    "contract": "valerius",
+    "contract_level": 1,
+    "contract_progress": {
+      "pyrrhus": 0,
+      "thalassos": 0,
+      "maliki": 0,
+      "valerius": 0
+    },
+    "contract_requirements": {
+      "pyrrhus": [
+        {
+          "type": "reputation",
+          "required": 57
+        },
+        {
+          "type": "attackCount",
+          "required": 6
+        },
+        {
+          "type": "battlesWon",
+          "required": 2
+        }
+      ],
+      "thalassos": [
+        {
+          "type": "reputation",
+          "required": 37
+        },
+        {
+          "type": "defendCount",
+          "required": 8
+        }
+      ],
+      "maliki": [
+        {
+          "type": "reputation",
+          "required": 44
+        },
+        {
+          "type": "abilityCount",
+          "required": 6
+        }
+      ],
+      "valerius": [
+        {
+          "type": "reputation",
+          "required": 0
+        },
+        {
+          "type": "tokenUsage",
+          "required": 0
+        }
+      ]
+    },
+    "metrics": {
+      "battlesWon": 0,
+      "attackCount": 1,
+      "defendCount": 0,
+      "abilityCount": 4,
+      "tokenUsage": 3
+    },
+    "contract_history": [
+      {
+        "contractId": "valerius",
+        "outcome": "accepted",
+        "reason": "Valerius values how often you spend tokens to create advantage. The pact accepts your record.",
+        "reputation": 24,
+        "dominantBehavior": "unproven",
+        "timestamp": "2026-03-22T07:39:08.668Z"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "wallet_address": "0x6dfebd9fc5e36a9fa75bf79090db66496c27a436",
+    "level": 1,
+    "health": 82,
+    "max_health": 82,
+    "attack": 10,
+    "defense": 3,
+    "tokens": 187,
+    "remanent": 187,
+    "reputation": 24,
+    "contract": "valerius",
+    "contract_level": 1,
+    "contract_progress": {
+      "pyrrhus": 0,
+      "thalassos": 0,
+      "maliki": 0,
+      "valerius": 0
+    },
+    "contract_requirements": {
+      "pyrrhus": [
+        {
+          "type": "reputation",
+          "required": 45
+        },
+        {
+          "type": "attackCount",
+          "required": 7
+        },
+        {
+          "type": "battlesWon",
+          "required": 2
+        }
+      ],
+      "thalassos": [
+        {
+          "type": "reputation",
+          "required": 38
+        },
+        {
+          "type": "defendCount",
+          "required": 4
+        }
+      ],
+      "maliki": [
+        {
+          "type": "reputation",
+          "required": 49
+        },
+        {
+          "type": "abilityCount",
+          "required": 6
+        }
+      ],
+      "valerius": [
+        {
+          "type": "reputation",
+          "required": 2
+        },
+        {
+          "type": "tokenUsage",
+          "required": 0
+        }
+      ]
+    },
+    "metrics": {
+      "battlesWon": 0,
+      "attackCount": 0,
+      "defendCount": 0,
+      "abilityCount": 0,
+      "tokenUsage": 0
+    },
+    "contract_history": [
+      {
+        "contractId": "valerius",
+        "outcome": "accepted",
+        "reason": "Valerius values how often you spend tokens to create advantage. The pact accepts your record.",
+        "reputation": 24,
+        "dominantBehavior": "unproven",
+        "timestamp": "2026-03-22T07:41:05.783Z"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "wallet_address": "0xbe1f35cbb7f73410cc10e76a7f7ae7c88801dfcb",
+    "level": 2,
+    "health": 82,
+    "max_health": 82,
+    "attack": 10,
+    "defense": 3,
+    "tokens": 52,
+    "remanent": 52,
+    "reputation": 14,
+    "contract": "valerius",
+    "contract_level": 2,
+    "contract_progress": {
+      "pyrrhus": 0,
+      "thalassos": 0,
+      "maliki": 0,
+      "valerius": 2
+    },
+    "contract_requirements": {
+      "pyrrhus": [
+        {
+          "type": "reputation",
+          "required": 47
+        },
+        {
+          "type": "attackCount",
+          "required": 5
+        },
+        {
+          "type": "battlesWon",
+          "required": 2
+        }
+      ],
+      "thalassos": [
+        {
+          "type": "reputation",
+          "required": 32
+        },
+        {
+          "type": "defendCount",
+          "required": 5
+        }
+      ],
+      "maliki": [
+        {
+          "type": "reputation",
+          "required": 50
+        },
+        {
+          "type": "abilityCount",
+          "required": 7
+        }
+      ],
+      "valerius": [
+        {
+          "type": "reputation",
+          "required": 9
+        },
+        {
+          "type": "tokenUsage",
+          "required": 1
+        }
+      ]
+    },
+    "metrics": {
+      "battlesWon": 2,
+      "attackCount": 78,
+      "defendCount": 1,
+      "abilityCount": 1,
+      "tokenUsage": 104
+    },
+    "contract_history": [
+      {
+        "contractId": "valerius",
+        "outcome": "accepted",
+        "reason": "INITIAL CONTRACT \u2013 NO REQUIREMENTS",
+        "reputation": 0,
+        "dominantBehavior": "unproven",
+        "timestamp": "2026-03-22T09:55:04.321Z"
+      }
+    ]
+  }
+]
